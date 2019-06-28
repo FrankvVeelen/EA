@@ -1,4 +1,10 @@
 import random
+import numpy
+import math
+
+def dist(x,y):
+    return numpy.sqrt(numpy.sum((x-y)**2))
+
 
 class Repair:
 	def swap_child_gene(self, child, i, n):
@@ -7,13 +13,13 @@ class Repair:
 		child[n] = swap
 		return child
 
-	def get_new_child(self, max_exchanges, problem, child, fitness):
+	def get_new_child(self, max_exchanges, problem, child, child_fitness, fitness):
 		N = random.randint(0, len(child)-1)
 		num_exchanges = 0
-		new_fitness = 0
-		current_fitness = fitness.calculate_fitness_genotype(child, problem)
+		new_fitness = child_fitness
 
-		for i in range(N, len(child)-1):
+		current_fitness = child_fitness
+		for i in range(N, len(child)-2):
 			for n in range(i+1, len(child)):
 				# check whether maximum number of exchanges allowed is reached
 				# if max_exchanges = -1 (no limit), keep running untill no exchanges possible
@@ -26,6 +32,7 @@ class Repair:
 					if current_fitness > new_fitness:
 						# if fitness is better, increment num_exchanges and break as we dont need to check further in this loop
 						num_exchanges += 1
+						print("better child found in repair")
 						break
 					else:
 						# if fitness is worse, swap back 
@@ -33,3 +40,4 @@ class Repair:
 			
 				else:
 					break
+		return [child, new_fitness]

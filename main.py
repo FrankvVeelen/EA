@@ -7,6 +7,7 @@ from fitness import Fitness
 from crossover import Crossover
 from plotter import Plotter
 from weights import Weights
+from repair import Repair
 import time
 from math import inf
 import matplotlib.animation as animation
@@ -42,6 +43,7 @@ population = Population(SIZE_POPULATION, NUM_NODES)
 fitness = Fitness("MO_tsp", SIZE_POPULATION, NUM_OBJECTIVES, weights.weights)
 # create crossover object to be used later
 crossover = Crossover("Order")
+repair = Repair()
 
 fitness.calculate_fitness_pop(population.population, problem)
 fitness.calculate_z_optimums_pop()
@@ -59,7 +61,8 @@ def run_problem(generation):
         # Calculate fitness of child
         child_fitness = fitness.calculate_fitness_genotype(child, problem)
         # Improvement
-        # to be implemented, maybe random switch of cities?
+        [child, child_fitness] = repair.get_new_child(SIZE_POPULATION, problem, child, child_fitness, fitness)
+        print(str(child) + str(child_fitness))
         # update of z
         fitness.calculate_z_optimums_genotype(child_fitness)
         # update of neighboring solutions
@@ -83,6 +86,7 @@ ani = animation.FuncAnimation(fig, run_problem, init_func=init, interval=2, blit
 plt.show()
 
 plotter = Plotter()
+
 plotter.plotRoute(problem, population.elite_population[0], 0)
 plotter.plotRoute(problem, population.elite_population[0], 1)
 
