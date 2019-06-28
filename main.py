@@ -17,7 +17,7 @@ ln, = plt.plot([], [], 'ro')
 # https://dces.essex.ac.uk/staff/qzhang/papers/moead.pdf
 
 # settings
-NUM_NODES = 100
+NUM_NODES = 10
 NUM_OBJECTIVES = 2
 NUM_NEIGHBORS = 2  # Called T in paper
 SIZE_POPULATION = NUM_OBJECTIVES
@@ -57,7 +57,7 @@ def run_problem(generation):
         # Calculate fitness of child
         child_fitness = fitness.calculate_fitness_genotype(child, problem)
         # Improvement
-        # to be implemented
+        # to be implemented, maybe random switch of cities?
         # update of z
         fitness.calculate_z_optimums_genotype(child_fitness)
         # update of neighboring solutions
@@ -66,6 +66,7 @@ def run_problem(generation):
                 population.population[j] = child
                 fitness.fitnesses[:][j] = child_fitness
                 print("Genotype was replaced")
+                break
         # update of EP
         population.remove_dominated_EP_by_child(child_fitness, NUM_OBJECTIVES)
         population.add_to_elite(child, child_fitness, NUM_OBJECTIVES)
