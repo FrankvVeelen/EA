@@ -13,8 +13,8 @@ class Repair:
 		new_fitness = 0
 		current_fitness = fitness.calculate_fitness_genotype(child, problem)
 
-		for i in range(N, len(child)-2):
-			for n in range(i+1, len(child)-1):
+		for i in range(N, len(child)-1):
+			for n in range(i+1, len(child)):
 				# check whether maximum number of exchanges allowed is reached
 				# if max_exchanges = -1 (no limit), keep running untill no exchanges possible
 				if max_exchanges < 0 or max_exchanges > num_exchanges:
