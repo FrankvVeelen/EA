@@ -10,8 +10,8 @@ class Population:
         self.elite_fitnesses = []
         for i in range(0, n):
             self.population[i] = generate_genotype("OrderBased", 0, num_nodes)
-        print("Initial population: ")
-        print(self.population)
+        #print("Initial population: ")
+        #print(self.population)
 
     def add_to_elite(self, genotype, genotype_fitnesses):
         if self.is_dominated_by_EP(genotype_fitnesses) == False:
@@ -21,15 +21,15 @@ class Population:
     def is_dominated_by_EP(self, genotype_fitness):
         flag = False
         for elite, elite_fitness in zip(self.elite_population, self.elite_fitnesses):
-            print(str(elite) + str(elite_fitness))
+            #print(str(elite) + str(elite_fitness))
             domination_count = 0
             for i in range(len(elite_fitness)):
                 if genotype_fitness[i] >= elite_fitness[i]:
                     domination_count += 1
-            print("Count: " + str(domination_count) + "Thres: " + str(len(elite_fitness)))
+            #print("Count: " + str(domination_count) + "Thres: " + str(len(elite_fitness)))
             if domination_count == len(elite_fitness):
                 flag = True
-                print("not adding to EP")
+                #print("not adding to EP")
         return flag
 
     def remove_dominated_EP_by_child(self, genotype_fitness):

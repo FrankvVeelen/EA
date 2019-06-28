@@ -17,7 +17,7 @@ EP, = plt.plot([], [], 'ro')
 # https://dces.essex.ac.uk/staff/qzhang/papers/moead.pdf
 
 # settings
-NUM_NODES = 500
+NUM_NODES = 10
 NUM_WEIGHT_VECTORS = 100
 NUM_OBJECTIVES = 2
 NUM_NEIGHBORS = 25  # Called T in paper
@@ -67,7 +67,7 @@ def run_problem(generation):
             if gte(child_fitness, neighbour) < gte(fitness.fitnesses[neighbour][:], neighbour):
                 population.population[neighbour] = child
                 fitness.fitnesses[neighbour][:] = child_fitness
-                print("Genotype was replaced")
+                #print("Genotype was replaced")
                 break
         # update of EP
         population.remove_dominated_EP_by_child(child_fitness)
@@ -81,4 +81,8 @@ def run_problem(generation):
 
 ani = animation.FuncAnimation(fig, run_problem, init_func=init, interval=2, blit=True, save_count=50)
 plt.show()
+
+plotter = Plotter()
+plotter.plotRoute(problem, population.elite_population[0], 0)
+plotter.plotRoute(problem, population.elite_population[0], 1)
 

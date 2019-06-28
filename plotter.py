@@ -16,11 +16,5 @@ class Plotter():
             previousCity = city
 
         for node in problem.nodes:
-            plt.plot(node.x[0], node.y[0], 'ro')
-
-    def plotFitnesses(self, fitnesses, elite_fitnesses):
-        for fitness in elite_fitnesses:
-            plt.plot(fitness[0], fitness[1], 'ro')
-        for fitness in fitnesses[:]:
-            plt.plot(fitness[0], fitness[1], 'bo')
+            plt.plot(node.x[objective], node.y[objective], 'ro')
         plt.show()

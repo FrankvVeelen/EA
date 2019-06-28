@@ -61,11 +61,10 @@ class Fitness:
     def calculate_z_optimums_genotype(self, genotype_fitness):
         # Check if genotype is better than optimum for each obj separately thus far
         for objective in range(self.num_objectives):
-            print("fitness new child: " + str(genotype_fitness[objective]),
-                  "old best: " + str(self.z_optimum))
+            # print("fitness new child: " + str(genotype_fitness[objective]), "old best: " + str(self.z_optimum))
             if genotype_fitness[objective] < self.z_optimum[objective]:
                 self.z_optimum[objective] = genotype_fitness[objective]
-                print("Z optimum was updated")
+                # print("Z optimum was updated")
 
 def distance_between_nodes(nodeA, nodeB, objective):
     distance = hypot(nodeA.x[objective] - nodeB.x[objective], nodeA.y[objective] - nodeB.y[objective])
