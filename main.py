@@ -62,7 +62,7 @@ def run_problem(generation):
         child_fitness = fitness.calculate_fitness_genotype(child, problem)
         # Improvement
         [child, child_fitness] = repair.get_new_child(SIZE_POPULATION, problem, child, child_fitness, fitness)
-        print(str(child) + str(child_fitness))
+        # print(str(child) + str(child_fitness))
         # update of z
         fitness.calculate_z_optimums_genotype(child_fitness)
         # update of neighboring solutions
@@ -85,8 +85,8 @@ def run_problem(generation):
 ani = animation.FuncAnimation(fig, run_problem, init_func=init, interval=2, blit=True, save_count=50)
 plt.show()
 
-plotter = Plotter()
-
-plotter.plotRoute(problem, population.elite_population[0], 0)
-plotter.plotRoute(problem, population.elite_population[0], 1)
+# plotter = Plotter()
+#
+# plotter.plotRoute(problem, population.elite_population[0], 0)
+# plotter.plotRoute(problem, population.elite_population[0], 1)
 
