@@ -29,7 +29,7 @@ class Population:
             #print("Count: " + str(domination_count) + "Thres: " + str(len(elite_fitness)))
             if domination_count == len(elite_fitness):
                 flag = True
-                #print("not adding to EP")
+                print("not adding to EP")
         return flag
 
     def remove_dominated_EP_by_child(self, genotype_fitness):

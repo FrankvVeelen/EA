@@ -8,9 +8,11 @@ class Crossover:
     def reproduce(self, neighbourhood, population):
         # select two parents from each "neighbourhood"
         # for i_neighbourhood, neighbourhood in enumerate(neighbourhoods):
-        random.shuffle(neighbourhood)
-        parentA = population[neighbourhood[0]]
-        parentB = population[neighbourhood[1]]
+        iparentB = random.randint(0, len(neighbourhood)-1)
+        iparentA = random.randint(0, len(neighbourhood)-1)
+
+        parentA = population[neighbourhood[iparentA]]
+        parentB = population[neighbourhood[iparentB]]
         child = self.perform_crossover(parentA, parentB, len(parentA))
         return child
 

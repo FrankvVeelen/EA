@@ -9,7 +9,7 @@ class Fitness:
         self.num_objectives = num_objectives
         self.weight_vector = weight_vector
 
-        self.fitnesses = [None]*size_population # fitnesses is array of fitness[objective][genotype]
+        self.fitnesses = [None]*size_population # fitnesses is array of fitness[genotype][objective]
         for i in range(self.size_population):
             self.fitnesses[i] = [None]*self.num_objectives
 

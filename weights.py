@@ -40,7 +40,7 @@ class Weights:
                 # then set it to inf to keep the indexes the same and so it wont be assigned again
                 distances[i_closest_vector] = inf
                 #print(distances)
-            print(self.neighbourhoods)
+        print(self.neighbourhoods)
 
     def dist_between_weights(self, weightA, weightB):
         result = 0

@@ -14,7 +14,7 @@ class Repair:
 		return child
 
 	def get_new_child(self, max_exchanges, problem, child, child_fitness, fitness):
-		N = random.randint(0, len(child)-1)
+		N = random.randint(0, len(child)-3)
 		num_exchanges = 0
 		new_fitness = child_fitness
 
@@ -32,7 +32,7 @@ class Repair:
 					if current_fitness > new_fitness:
 						# if fitness is better, increment num_exchanges and break as we dont need to check further in this loop
 						num_exchanges += 1
-						print("better child found in repair")
+						# print("better child found in repair")
 						break
 					else:
 						# if fitness is worse, swap back 
