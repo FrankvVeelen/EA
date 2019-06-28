@@ -19,7 +19,7 @@ class Repair:
 				# if max_exchanges = -1 (no limit), keep running untill no exchanges possible
 				if max_exchanges < 0 or max_exchanges > num_exchanges:
 					# swap current gene with i+1 (in beginning its N+1)
-					child = swap_child_gene(child, i, n)
+					child = self.swap_child_gene(child, i, n)
 
 					# check whether new child has a better fitness (thus lower) than original child
 					new_fitness = fitness.calculate_fitness_genotype(child, problem)
@@ -29,7 +29,7 @@ class Repair:
 						break
 					else:
 						# if fitness is worse, swap back 
-						child = swap_child_gene(child, i, n)
+						child = self.swap_child_gene(child, i, n)
 			
 				else:
 					break
