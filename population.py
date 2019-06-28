@@ -13,23 +13,35 @@ class Population:
         print("Initial population: ")
         print(self.population)
 
-    def add_to_elite(self, genotype, genotype_fitnesses, num_objectives):
-        if self.is_dominated_by_EP(genotype_fitnesses, num_objectives) == False:
+    def add_to_elite(self, genotype, genotype_fitnesses):
+        if self.is_dominated_by_EP(genotype_fitnesses) == False:
             self.elite_population.append(genotype)
             self.elite_fitnesses.append(genotype_fitnesses)
 
-    def is_dominated_by_EP(self, genotype_fitness, num_objectives):
+    def is_dominated_by_EP(self, genotype_fitness):
         flag = False
         for elite, elite_fitness in zip(self.elite_population, self.elite_fitnesses):
-            if all(fitness >= elite_fitness[i] for i, fitness in enumerate(genotype_fitness)):
+            print(str(elite) + str(elite_fitness))
+            domination_count = 0
+            for i in range(len(elite_fitness)):
+                if genotype_fitness[i] >= elite_fitness[i]:
+                    domination_count += 1
+
+            if domination_count == len(elite_fitness):
                 flag = True
+                print("not adding to EP")
         return flag
 
-    def remove_dominated_EP_by_child(self, genotype_fitness, num_objectives):
-        flag = False
+    def remove_dominated_EP_by_child(self, genotype_fitness):
         for elite, elite_fitness in zip(self.elite_population, self.elite_fitnesses):
-            if all(elite_fitness[i] >= fitness for i, fitness in enumerate(genotype_fitness)):
-                flag = True
+            if self.find_dominated_EP_by_child(genotype_fitness, elite_fitness):
+                self.elite_population.remove(elite)
+
+    def find_dominated_EP_by_child(self, genotype_fitness, elite_fitness):
+        flag = False
+        if all(elite_fitness[i] > fitness for i, fitness in enumerate(genotype_fitness)):
+            flag = True
+            print("removing from EP")
         return flag
 
     # def check_for_dominated_solutions(self, fitnesses, num_objectives):

@@ -2,20 +2,24 @@ from math import sqrt, inf
 
 
 class Weights:
-    def __init__(self, num_obj, num_neighbors):
+    def __init__(self, num_obj, num_weights, num_neighbors):
         self.num_objectives = num_obj
         self.num_neighbors = num_neighbors
-        self.weights = [0] * num_obj
+        self.num_weights = num_weights
+        self.weights = [0] * num_weights
         self.generate_objective_weights()
-        self.neighbourhoods = [0] * num_obj #neighbours for weight[i] are itself and the closest weight vectors
-        for i in range(num_obj):
+        self.neighbourhoods = [0] * num_weights  #neighbours for weight[i] are itself and the closest weight vectors
+        for i in range(num_weights):
             self.neighbourhoods[i] = [0] * num_neighbors
         self.find_neighbors()
 
     def generate_objective_weights(self):
+        # https: // thiagodnf.github.io / weight - vectors - generator /
         if self.num_objectives == 2:
-            self.weights[0] = [0.3, 1]
-            self.weights[1] = [1, 0.3]
+            self.weights[0] = [1, 0]
+            for i in range(1, self.num_weights):
+                self.weights[i] = [1 - (1/self.num_weights)*i, 0+(1/self.num_weights)*i]
+            print(self.weights)
         elif self.num_objectives == 3:
             self.weights[0] = [0.5, 0.75, 1]
             self.weights[1] = [1, 0.5, 0.75]
@@ -24,7 +28,7 @@ class Weights:
     def find_neighbors(self):
         # finds the weight neighbors of each weight equal. This consists of itself and n-1 others
         for weight_index, weight in enumerate(self.weights):
-            distances = [0] * self.num_objectives
+            distances = [0] * self.num_weights
             for neigh_index, potential_neightbor in enumerate(self.weights):
                 distances[neigh_index] = self.dist_between_weights(weight, potential_neightbor)
            #print(distances)

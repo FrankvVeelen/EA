@@ -13,26 +13,28 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 fig, ax = plt.subplots()
 xdata, ydata = [], []
-ln, = plt.plot([], [], 'ro')
+EP, = plt.plot([], [], 'ro')
 # https://dces.essex.ac.uk/staff/qzhang/papers/moead.pdf
 
 # settings
-NUM_NODES = 10
+NUM_NODES = 100
+NUM_WEIGHT_VECTORS = 50
 NUM_OBJECTIVES = 2
-NUM_NEIGHBORS = 2  # Called T in paper
-SIZE_POPULATION = NUM_OBJECTIVES
+NUM_NEIGHBORS = 5  # Called T in paper
+SIZE_POPULATION = NUM_WEIGHT_VECTORS
 GENERATIONS = 3
 
 
-def gte(genotype_fitness, j):
+def gte(genotype_fitness, neighbour):
     min_result = inf
     for i in range(NUM_OBJECTIVES):
-        if weights.weights[i][j]*abs(genotype_fitness[i] - fitness.best_genotype_1d[i]) < min_result:
-            min_result = weights.weights[j][i]*abs(genotype_fitness[i] - fitness.best_genotype_1d[i])
+        if weights.weights[neighbour][i]*abs(genotype_fitness[i] - fitness.z_optimum[i]) < min_result:
+            min_result = weights.weights[neighbour][i] * abs(genotype_fitness[i] - fitness.z_optimum[i])
     return min_result
 
+
 # generate a problem
-weights = Weights(NUM_OBJECTIVES, NUM_NEIGHBORS)
+weights = Weights(NUM_OBJECTIVES, NUM_WEIGHT_VECTORS, NUM_NEIGHBORS)
 problem = Problem("TSP", NUM_OBJECTIVES, weights.weights, NUM_NODES, NUM_NEIGHBORS)
 # generate an initial population
 population = Population(SIZE_POPULATION, NUM_NODES)
@@ -47,7 +49,7 @@ fitness.calculate_z_optimums_pop()
 def init():
     ax.set_xlim(0, 10000)
     ax.set_ylim(0, 10000)
-    return ln,
+    return EP,
 
 def run_problem(generation):
     print("Generation: " + str(generation))
@@ -62,19 +64,19 @@ def run_problem(generation):
         fitness.calculate_z_optimums_genotype(child_fitness)
         # update of neighboring solutions
         for j, neighbour in enumerate(neighbourhood):
-            if gte(child_fitness, j) < gte(fitness.fitnesses[:][j], j):
-                population.population[j] = child
-                fitness.fitnesses[:][j] = child_fitness
+            if gte(child_fitness, neighbour) < gte(fitness.fitnesses[neighbour][:], neighbour):
+                population.population[neighbour] = child
+                fitness.fitnesses[neighbour][:] = child_fitness
                 print("Genotype was replaced")
                 break
         # update of EP
-        population.remove_dominated_EP_by_child(child_fitness, NUM_OBJECTIVES)
-        population.add_to_elite(child, child_fitness, NUM_OBJECTIVES)
-        print(population.elite_fitnesses)
+        population.remove_dominated_EP_by_child(child_fitness)
+        population.add_to_elite(child, child_fitness)
+        for elite_fitness in population.elite_fitnesses:
+            print(elite_fitness)
         x, y = zip(*population.elite_fitnesses)
-    ln.set_data(x, y)
-    time.sleep(1)
-    return ln,
+        EP.set_data(x, y)
+        return EP,
 
 
 ani = animation.FuncAnimation(fig, run_problem, init_func=init, interval=2, blit=True, save_count=50)
