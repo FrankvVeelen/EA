@@ -4,7 +4,6 @@ import random
 class Crossover:
     def __init__(self, crossover_type):
         self.crossover_type = crossover_type
-        pass
 
     def reproduce(self, neighbourhood, population):
         # select two parents from each "neighbourhood"

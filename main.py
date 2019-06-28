@@ -17,10 +17,10 @@ EP, = plt.plot([], [], 'ro')
 # https://dces.essex.ac.uk/staff/qzhang/papers/moead.pdf
 
 # settings
-NUM_NODES = 100
-NUM_WEIGHT_VECTORS = 50
+NUM_NODES = 500
+NUM_WEIGHT_VECTORS = 100
 NUM_OBJECTIVES = 2
-NUM_NEIGHBORS = 5  # Called T in paper
+NUM_NEIGHBORS = 25  # Called T in paper
 SIZE_POPULATION = NUM_WEIGHT_VECTORS
 GENERATIONS = 3
 
@@ -47,8 +47,8 @@ fitness.calculate_fitness_pop(population.population, problem)
 fitness.calculate_z_optimums_pop()
 
 def init():
-    ax.set_xlim(0, 10000)
-    ax.set_ylim(0, 10000)
+    ax.set_xlim(0, 50000)
+    ax.set_ylim(0, 50000)
     return EP,
 
 def run_problem(generation):
@@ -72,8 +72,8 @@ def run_problem(generation):
         # update of EP
         population.remove_dominated_EP_by_child(child_fitness)
         population.add_to_elite(child, child_fitness)
-        for elite_fitness in population.elite_fitnesses:
-            print(elite_fitness)
+        #for elite_fitness in population.elite_fitnesses:
+            #print(elite_fitness)
         x, y = zip(*population.elite_fitnesses)
         EP.set_data(x, y)
         return EP,

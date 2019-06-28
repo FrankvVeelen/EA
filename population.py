@@ -26,7 +26,7 @@ class Population:
             for i in range(len(elite_fitness)):
                 if genotype_fitness[i] >= elite_fitness[i]:
                     domination_count += 1
-
+            print("Count: " + str(domination_count) + "Thres: " + str(len(elite_fitness)))
             if domination_count == len(elite_fitness):
                 flag = True
                 print("not adding to EP")
@@ -36,6 +36,7 @@ class Population:
         for elite, elite_fitness in zip(self.elite_population, self.elite_fitnesses):
             if self.find_dominated_EP_by_child(genotype_fitness, elite_fitness):
                 self.elite_population.remove(elite)
+                self.elite_fitnesses.remove(elite_fitness)
 
     def find_dominated_EP_by_child(self, genotype_fitness, elite_fitness):
         flag = False
