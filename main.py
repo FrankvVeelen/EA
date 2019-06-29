@@ -110,7 +110,7 @@ def run_problem(generation):
         print("Front 1: " + str(fronts[i]))
         while len(new_population) + len(fronts[i]) < SIZE_POPULATION:
             print("front: " +str(i))
-            # selection.crowding_distance_assignment(front)
+            #selection.crowding_distance_assignment(fronts[i])
             print("adding individual")
             for individual in fronts[i]:
                 new_population.append(individual)
