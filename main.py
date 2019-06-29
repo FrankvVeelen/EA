@@ -21,9 +21,9 @@ EP, = plt.plot([], [], 'ro', alpha=0.5)
 
 # settings
 NUM_NODES = 50
-NUM_WEIGHT_VECTORS = 100
+NUM_WEIGHT_VECTORS = 20
 NUM_OBJECTIVES = 2
-NUM_NEIGHBORS = 30  # Called T in paper
+NUM_NEIGHBORS = 3  # Called T in paper
 SIZE_POPULATION = NUM_WEIGHT_VECTORS
 GENERATIONS = 3
 algorithm = "NSGA2"
@@ -40,6 +40,7 @@ def gte(genotype_fitness, neighbour):
 problem = Problem("TSP", NUM_OBJECTIVES, NUM_NODES)
 # generate an initial population
 population = Population(SIZE_POPULATION, NUM_NODES, NUM_OBJECTIVES)
+
 # calculate initial fitness
 fitness = Fitness("MO_tsp", SIZE_POPULATION, NUM_OBJECTIVES, population.population)
 # create crossover object to be used later
@@ -57,8 +58,8 @@ fitness.calculate_fitness_pop(population.population, problem)
 if algorithm == "MOEA":
     fitness.calculate_z_optimums_pop()
 elif algorithm == "NSGA2":
-    selection.set_dominations()
-    offspring_generator.generate_offspring(population.population, crossover, repair)
+    selection.set_dominations(population.population)
+    offspring_generator.generate_offspring(population.population, crossover, repair, SIZE_POPULATION, problem, fitness)
 
 
 def init():
@@ -92,24 +93,59 @@ def run_problem(generation):
         EP.set_data(x, y)
         return EP,
     else:
-        selection.sort_dominations()
+        selection.set_dominations(population.population)
+        selection.sort_dominations(population.population)
         new_population = []
         i = 1
-        pop_index = 0
-        front_size = selection.find_front_size(i)
-        while len(new_population) + front_size <= SIZE_POPULATION:
-            for i_individual in range(pop_index, front_size):
-                selection.calculate_crowding_distance(i_individual)
-                new_population.append(population.population[i_individual])
-
+        fronts = []
+        while sum(len(x) for x in fronts) < SIZE_POPULATION:
+            front = selection.find_front(i, population.population)
+            fronts.append(front)
             i += 1
-            pop_index += front_size
+        i = 0
+        print("Fronts found:" + str(len(fronts)))
+        print("fronts: " + str(fronts))
+        total_length = 0
+        print("Length front 1: " + str(len(fronts[i])))
+        print("Front 1: " + str(fronts[i]))
+        while len(new_population) + len(fronts[i]) < SIZE_POPULATION:
+            print("front: " +str(i))
+            # selection.crowding_distance_assignment(front)
+            print("adding individual")
+            for individual in fronts[i]:
+                new_population.append(individual)
+            i += 1
+        if len(new_population) != SIZE_POPULATION:
+            front = selection.sort_front(fronts[i])
+            i = 0
+            print("last front: " + str(front))
+            while len(new_population) < SIZE_POPULATION-1:
+                len(new_population)
+                print(i)
+                new_population.append(front[i])
+                i += 1
+        print("size new population: " + str(len(new_population)))
+        population.population = new_population
+
+        x = []
+        y = []
+        for individual in population.population:
+            print(individual.fitness)
+            x.append(individual.fitness[0])
+            y.append(individual.fitness[1])
+        EP.set_data(x, y)
+
+        offspring_generator.generate_offspring(population.population, crossover, repair, SIZE_POPULATION, problem, fitness)
+        for individual in population.population:
+            print(individual.fitness)
+        return EP,
+
 
 ani = animation.FuncAnimation(fig, run_problem, init_func=init, interval=2, blit=True, save_count=50)
 plt.show()
-
-plotter = Plotter()
-
-plotter.plotRoute(problem, population.elite_population[0], 0)
-plotter.plotRoute(problem, population.elite_population[0], 1)
+#
+# plotter = Plotter()
+#
+# plotter.plotRoute(problem, population.elite_population[0], 0)
+# plotter.plotRoute(problem, population.elite_population[0], 1)
 

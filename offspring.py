@@ -1,28 +1,29 @@
-
+from population import Individual
 import random
 
 
 class Offspring:
-    def generate_offspring(self, parent_population, crossover, repair):
+    def generate_offspring(self, parent_population, crossover, repair, max_exchanges, problem, fitness):
         size_population = len(parent_population)
         children = []
-        while size_population*2 > len(parent_population):
+        while size_population*2-1 > len(parent_population):
             # select 4 random pot. parents
-            potential_parents = [random.randint(0, size_population), random.randint(0, size_population),
-                                 random.randint(0, size_population), random.randint(0, size_population)]
+            potential_parents = [random.randint(0, size_population-1), random.randint(0, size_population-1),
+                                 random.randint(0, size_population-1), random.randint(0, size_population-1)]
             # perform tournament selection to keep 2
+            print(potential_parents)
             parentA = self.tournament_selection(parent_population[potential_parents[0]],
                                                 parent_population[potential_parents[1]])
             parentB = self.tournament_selection(parent_population[potential_parents[2]],
                                                 parent_population[potential_parents[3]])
             # perform crossover
-            [childA, childB] = crossover.perform_crossover(parentA, parentB)
+            [childA, childB] = crossover.perform_crossover(parentA.genotype, parentB.genotype)
             # perform mutation
-            childA = repair.get_new_child(childA)
-            childB = repair.get_new_child(childB)
+            childA = repair.get_new_child(max_exchanges, problem, childA, fitness.calculate_fitness_genotype(childA, problem), fitness)
+            childB = repair.get_new_child(max_exchanges, problem, childB, fitness.calculate_fitness_genotype(childB, problem), fitness)
             # add to children
-            parent_population.append(childA)
-            parent_population.append(childB)
+            parent_population.append(Individual(childA[0], childA[1]))
+            parent_population.append(Individual(childB[0], childB[1]))
 
 
     def tournament_selection(self, parentA, parentB):
