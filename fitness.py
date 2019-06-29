@@ -3,15 +3,13 @@ from math import hypot, inf
 
 
 class Fitness:
-    def __init__(self, fitness_type, size_population, num_objectives, weight_vector):
+    def __init__(self, fitness_type, size_population, num_objectives, population_array):
         self.fitness_type = fitness_type
         self.size_population = size_population
         self.num_objectives = num_objectives
-        self.weight_vector = weight_vector
-
-        self.fitnesses = [None]*size_population # fitnesses is array of fitness[genotype][objective]
+        self.population = population_array
         for i in range(self.size_population):
-            self.fitnesses[i] = [None]*self.num_objectives
+            self.population[i].fitness = [None]*self.num_objectives
 
         self.z_optimum = [inf] * num_objectives  # called z[i] in paper
 
@@ -27,23 +25,23 @@ class Fitness:
         for genotype in range(self.size_population):
             for objective in range(self.num_objectives):
                 fitness = 0
-                # previousCity = population.population[genotype][-1]
-                previousCity = None
-                for city in population[genotype]:
+                previousCity = population[genotype].genotype[-1]
+                # previousCity = None
+                for city in population[genotype].genotype:
                     if previousCity is not None:
                         # fitness += hypot(problem.nodes[previousCity].x[objective] - problem.nodes[city].x[objective],
                         #                  problem.nodes[previousCity].y[objective] - problem.nodes[city].y[objective])
                         fitness += distance_between_nodes(problem.nodes[previousCity], problem.nodes[city],
                                                           objective)
                     previousCity = city
-                self.fitnesses[genotype][objective] = fitness
+                self.population[genotype].fitness[objective] = fitness
 
     def MO_tsp_fitness_genotype(self, genotype, problem): # TODO use this in the pop function
         fitness_genotype = [0]*self.num_objectives
         for objective in range(self.num_objectives):
             fitness = 0
-            # previousCity = population.population[genotype][-1]
-            previousCity = None
+            previousCity = genotype[-1]
+            #previousCity = None
             for city in genotype:
                 if previousCity is not None:
                     fitness += distance_between_nodes(problem.nodes[previousCity], problem.nodes[city], objective)
@@ -55,8 +53,8 @@ class Fitness:
         # find the best genotype for every objective separately
         for objective in range(self.num_objectives):
             for genotype in range(self.size_population):
-                if self.fitnesses[genotype][objective] < self.z_optimum[objective]:
-                    self.z_optimum[objective] = self.fitnesses[genotype][objective]
+                if self.population[genotype].fitness[objective] < self.z_optimum[objective]:
+                    self.z_optimum[objective] = self.population[genotype].fitness[objective]
 
     def calculate_z_optimums_genotype(self, genotype_fitness):
         # Check if genotype is better than optimum for each obj separately thus far

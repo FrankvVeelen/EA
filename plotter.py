@@ -6,8 +6,8 @@ class Plotter():
         #self.plotRoute(problem, genotype, objective)
         #plt.show()
     def plotRoute(self, problem, genotype, objective):
-        # previousCity = population.population[genotype][NUM_NODES-1]  # to make it cyclical, otherwise make None
-        previousCity = None
+        previousCity = genotype[-1]  # to make it cyclical, otherwise make None
+        #previousCity = None
         for city in genotype:
             if previousCity is not None:
                 plt.plot([problem.nodes[previousCity].x[objective], problem.nodes[city].x[objective]],

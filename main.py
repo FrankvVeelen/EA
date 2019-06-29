@@ -8,7 +8,8 @@ from crossover import Crossover
 from plotter import Plotter
 from weights import Weights
 from repair import Repair
-import time
+from selection import Selection
+
 from math import inf
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
@@ -24,6 +25,7 @@ NUM_OBJECTIVES = 2
 NUM_NEIGHBORS = 30  # Called T in paper
 SIZE_POPULATION = NUM_WEIGHT_VECTORS
 GENERATIONS = 3
+algorithm = "MOEA"
 
 
 def gte(genotype_fitness, neighbour):
@@ -34,23 +36,28 @@ def gte(genotype_fitness, neighbour):
     return min_result
 
 
-# generate a problem
-weights = Weights(NUM_OBJECTIVES, NUM_WEIGHT_VECTORS, NUM_NEIGHBORS)
-problem = Problem("TSP", NUM_OBJECTIVES, weights.weights, NUM_NODES, NUM_NEIGHBORS)
+problem = Problem("TSP", NUM_OBJECTIVES, NUM_NODES)
 # generate an initial population
-population = Population(SIZE_POPULATION, NUM_NODES)
+population = Population(SIZE_POPULATION, NUM_NODES, NUM_OBJECTIVES)
 # calculate initial fitness
-fitness = Fitness("MO_tsp", SIZE_POPULATION, NUM_OBJECTIVES, weights.weights)
+fitness = Fitness("MO_tsp", SIZE_POPULATION, NUM_OBJECTIVES, population.population)
 # create crossover object to be used later
-crossover = Crossover("Order")
-repair = Repair()
+# generate a problem
+if algorithm == "MOEA":
+    crossover = Crossover("Order")
+    weights = Weights(NUM_OBJECTIVES, NUM_WEIGHT_VECTORS, NUM_NEIGHBORS)
+    repair = Repair()
+elif algorithm == "NSGA2":
+    selection = Selection(SIZE_POPULATION)
+    offspring_generator = Offspring()
+    pass
 
 fitness.calculate_fitness_pop(population.population, problem)
 fitness.calculate_z_optimums_pop()
 
 def init():
-    ax.set_xlim(0, max(fitness.fitnesses[:][0])*NUM_OBJECTIVES)
-    ax.set_ylim(0, max(fitness.fitnesses[:][0])*NUM_OBJECTIVES)
+    ax.set_xlim(0, population.population[0].fitness[0]*NUM_OBJECTIVES)
+    ax.set_ylim(0, population.population[0].fitness[1]*NUM_OBJECTIVES)
     return EP,
 
 def run_problem(generation):
@@ -66,9 +73,9 @@ def run_problem(generation):
         fitness.calculate_z_optimums_genotype(child_fitness)
         # update of neighboring solutions
         for neighbour in neighbourhood:
-            if gte(child_fitness, neighbour) < gte(fitness.fitnesses[neighbour][:], neighbour):
-                population.population[neighbour] = child
-                fitness.fitnesses[neighbour][:] = child_fitness
+            if gte(child_fitness, neighbour) < gte(population.population[neighbour].fitness, neighbour):
+                population.population[neighbour].genotype = child
+                population.population[neighbour].fitness = child_fitness
                 break
         # update of EP
         population.add_to_elite(child, child_fitness)
