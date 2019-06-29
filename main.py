@@ -26,7 +26,7 @@ NUM_WEIGHT_VECTORS = SIZE_POPULATION
 NUM_OBJECTIVES = 2
 NUM_NEIGHBORS = 3  # Called T in paper
 GENERATIONS = 3
-algorithm = "NSGA2"
+algorithm = "MOEA"  # MOEA or NSGA2
 
 
 def gte(genotype_fitness, neighbour):
