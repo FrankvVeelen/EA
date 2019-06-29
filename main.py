@@ -21,10 +21,10 @@ EP, = plt.plot([], [], 'ro', alpha=0.5)
 
 # settings
 NUM_NODES = 50
-NUM_WEIGHT_VECTORS = 20
+SIZE_POPULATION = 50
+NUM_WEIGHT_VECTORS = SIZE_POPULATION
 NUM_OBJECTIVES = 2
 NUM_NEIGHBORS = 3  # Called T in paper
-SIZE_POPULATION = NUM_WEIGHT_VECTORS
 GENERATIONS = 3
 algorithm = "NSGA2"
 
@@ -103,46 +103,38 @@ def run_problem(generation):
             fronts.append(front)
             i += 1
         i = 0
-        print("Fronts found:" + str(len(fronts)))
-        print("fronts: " + str(fronts))
         total_length = 0
-        print("Length front 1: " + str(len(fronts[i])))
-        print("Front 1: " + str(fronts[i]))
         while len(new_population) + len(fronts[i]) < SIZE_POPULATION:
-            print("front: " +str(i))
-            #selection.crowding_distance_assignment(fronts[i])
-            print("adding individual")
+            selection.crowding_distance_assignment(fronts[i])
             for individual in fronts[i]:
                 new_population.append(individual)
             i += 1
         if len(new_population) != SIZE_POPULATION:
             front = selection.sort_front(fronts[i])
             i = 0
-            print("last front: " + str(front))
             while len(new_population) < SIZE_POPULATION-1:
                 len(new_population)
-                print(i)
                 new_population.append(front[i])
                 i += 1
-        print("size new population: " + str(len(new_population)))
         population.population = new_population
 
         x = []
         y = []
         for individual in population.population:
-            print(individual.fitness)
             x.append(individual.fitness[0])
             y.append(individual.fitness[1])
         EP.set_data(x, y)
 
         offspring_generator.generate_offspring(population.population, crossover, repair, SIZE_POPULATION, problem, fitness)
-        for individual in population.population:
-            print(individual.fitness)
         return EP,
 
 
 ani = animation.FuncAnimation(fig, run_problem, init_func=init, interval=2, blit=True, save_count=50)
 plt.show()
+
+print("Final solutions: ")
+for i in population.population:
+    print(i.genotype)
 #
 # plotter = Plotter()
 #

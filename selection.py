@@ -39,18 +39,17 @@ class Selection:
 
     def crowding_distance_assignment(self, I):
         l = len(I)
-        I_dist = [0] * l
 
-        if len(I[0]>0):
+        if len(I) > 1:
+            for i in range(1, l-1):
+                I[i].crowding_distance = 0
             for m in range(len(I[0].fitness)):
                 I.sort(key=lambda population: population.fitness[m])
                 I[0].crowding_distance = inf
                 I[1].crowding_distance = inf
 
-
-                for i in range(1, l - 1):
-                    I[i].crowding_distance += (I[i + 1].fitness[m] - I[i - 1].fitness[m]) / (
-                            I[-1].fitness[m] - I[0].fitness[m])
+                for i in range(1, l-1):
+                    I[i].crowding_distance+=(I[i+1].fitness[m]-I[i - 1].fitness[m])/(I[-1].fitness[m]-I[0].fitness[m])
 
 
     def sort_front(self, front):
