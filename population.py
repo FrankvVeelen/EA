@@ -14,7 +14,8 @@ class Population:
         #print(self.population)
 
     def add_to_elite(self, genotype, genotype_fitnesses):
-        if self.is_dominated_by_EP(genotype_fitnesses) == False:
+        self.remove_dominated_EP_by_child(genotype_fitnesses) # first remove the elite that will be dominated by this solution
+        if self.is_dominated_by_EP(genotype_fitnesses) == False: # then see if this solution has to be added
             self.elite_population.append(genotype)
             self.elite_fitnesses.append(genotype_fitnesses)
 
@@ -29,7 +30,7 @@ class Population:
             #print("Count: " + str(domination_count) + "Thres: " + str(len(elite_fitness)))
             if domination_count == len(elite_fitness):
                 flag = True
-                print("not adding to EP")
+                #print("not adding to EP")
         return flag
 
     def remove_dominated_EP_by_child(self, genotype_fitness):
@@ -42,7 +43,7 @@ class Population:
         flag = False
         if all(elite_fitness[i] > fitness for i, fitness in enumerate(genotype_fitness)):
             flag = True
-            print("removing from EP")
+            #print("removing from EP")
         return flag
 
     # def check_for_dominated_solutions(self, fitnesses, num_objectives):

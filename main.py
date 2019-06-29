@@ -19,9 +19,9 @@ EP, = plt.plot([], [], 'ro', alpha=0.5)
 
 # settings
 NUM_NODES = 50
-NUM_WEIGHT_VECTORS = 250
+NUM_WEIGHT_VECTORS = 100
 NUM_OBJECTIVES = 2
-NUM_NEIGHBORS = 15  # Called T in paper
+NUM_NEIGHBORS = 30  # Called T in paper
 SIZE_POPULATION = NUM_WEIGHT_VECTORS
 GENERATIONS = 3
 
@@ -71,11 +71,9 @@ def run_problem(generation):
                 fitness.fitnesses[neighbour][:] = child_fitness
                 break
         # update of EP
-        population.remove_dominated_EP_by_child(child_fitness)
         population.add_to_elite(child, child_fitness)
-        #for elite_fitness in population.elite_fitnesses:
-            #print(elite_fitness)
     x, y = zip(*population.elite_fitnesses)
+    print("Number of elite solutions: " + str(len(x)))
     EP.set_data(x, y)
     return EP,
 
