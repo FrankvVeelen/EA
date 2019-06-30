@@ -19,7 +19,6 @@ class Weights:
             self.weights[0] = [1, 0]
             for i in range(1, self.num_weights):
                 self.weights[i] = [1 - (1/self.num_weights)*i, 0+(1/self.num_weights)*i]
-            print(self.weights)
         elif self.num_objectives == 3:
             self.weights[0] = [0.5, 0.75, 1]
             self.weights[1] = [1, 0.5, 0.75]
@@ -31,7 +30,6 @@ class Weights:
             distances = [0] * self.num_weights
             for neigh_index, potential_neightbor in enumerate(self.weights):
                 distances[neigh_index] = self.dist_between_weights(weight, potential_neightbor)
-           #print(distances)
             for neighbor in range(self.num_neighbors):
                 # get the weight vector that is closest to weight vector weight_index
                 i_closest_vector = distances.index(min(distances))

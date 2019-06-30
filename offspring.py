@@ -3,7 +3,7 @@ import random
 
 
 class Offspring:
-    def generate_offspring(self, parent_population, crossover, repair, max_exchanges, problem, fitness):
+    def generate_offspring(self, parent_population, crossover, repair, max_exchanges, problem, fitness, mutation):
         size_population = len(parent_population)
         children = []
         while size_population*2-1 > len(parent_population):
@@ -11,7 +11,6 @@ class Offspring:
             potential_parents = [random.randint(0, size_population-1), random.randint(0, size_population-1),
                                  random.randint(0, size_population-1), random.randint(0, size_population-1)]
             # perform tournament selection to keep 2
-            print(potential_parents)
             parentA = self.tournament_selection(parent_population[potential_parents[0]],
                                                 parent_population[potential_parents[1]])
             parentB = self.tournament_selection(parent_population[potential_parents[2]],
@@ -22,6 +21,10 @@ class Offspring:
             childA = repair.get_new_child(max_exchanges, problem, childA, fitness.calculate_fitness_genotype(childA, problem), fitness)
             childB = repair.get_new_child(max_exchanges, problem, childB, fitness.calculate_fitness_genotype(childB, problem), fitness)
             # add to children
+            o_childA = Individual(childA[0], childA[1])
+            o_childA = mutation.mutate(o_childA, fitness, problem)
+            o_childB = Individual(childB[0], childB[1])
+            o_childB = mutation.mutate(o_childB, fitness, problem)
             parent_population.append(Individual(childA[0], childA[1]))
             parent_population.append(Individual(childB[0], childB[1]))
 

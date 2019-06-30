@@ -20,11 +20,7 @@ class Selection:
                     population[p].set_of_dominations.append(q)
 
     def sort_dominations(self, population):
-        for individual in population:
-            print(individual.domination_count)
         population.sort(key=lambda x: x.domination_count)
-        for individual in population:
-            print(individual.domination_count)
 
     def find_front(self, i, population):
         front = []
@@ -49,8 +45,10 @@ class Selection:
                 I[1].crowding_distance = inf
 
                 for i in range(1, l-1):
-                    I[i].crowding_distance+=(I[i+1].fitness[m]-I[i - 1].fitness[m])/(I[-1].fitness[m]-I[0].fitness[m])
-
+                    try:
+                        I[i].crowding_distance+=(I[i+1].fitness[m]-I[i - 1].fitness[m])/(I[-1].fitness[m]-I[0].fitness[m])
+                    except ZeroDivisionError:
+                        I[i].crowding_distance = inf
 
     def sort_front(self, front):
         front.sort(key=lambda x: x.crowding_distance, reverse=True)
